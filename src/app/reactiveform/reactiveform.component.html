@@ -1,5 +1,5 @@
 <!-- <p>reactiveform works!</p> -->
-<div class="container-fluid">
+<div class="container-fluid" (ngSubmit)="onSubmit()">
     <h2>Registration Form</h2>
     {{registrationForm.value | json}}
     <form [formGroup]="registrationForm">
@@ -22,7 +22,21 @@
             [class.is-invalid]="registrationForm.errors?.misMatch">
             <small class="text-danger" *ngIf="registrationForm.errors?.misMatch">password do not match</small>
         </div>
-        <button class="btn btn-primary" type="submit">Register</button>
+        <div>
+            <label>Email</label>
+            <button type="button" class="btn btn-secondary btn-sm m-2" (click)="addAlternateEmail()">Add Email</button>
+            <input type="email" class="form-control" formControlName="email"
+             [class.is-invalid]="email.invalid && email.touched">
+             <div *ngIf="email.invalid && email.touched">
+                <small *ngIf="email.errors?.required" class="text-danger">Email is required</small>
+                <small *ngIf="email.errors?.email" class="text-danger">Email should be in proper format</small>
+            </div>
+            <div formArrayName="alternateEmails" *ngFor="let email of alternateEmails.controls;let i = index">
+                <input type="text" class="form-control my-1"[formControlName]="i">
+            </div>
+        </div><br>
+        
+        <button class="btn btn-primary" type="submit" [disabled]="registrationForm.invalid">Register</button>
         <button class="btn btn-secondary ml-2" type="button" (click)="loadApiPatch()">Load API</button> 
     </form>
 </div>

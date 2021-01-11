@@ -1,5 +1,6 @@
 import { Component, OnInit } from '@angular/core';
-import { FormBuilder, FormControl, FormGroup, Validators } from '@angular/forms';
+import { FormArray, FormBuilder, FormControl, FormGroup, Validators } from '@angular/forms';
+import { Router } from '@angular/router';
 import { Password1Validator } from './password1.validator';
 
 @Component({
@@ -9,7 +10,7 @@ import { Password1Validator } from './password1.validator';
 })
 export class ReactiveformComponent implements OnInit {
 
-  constructor(private fb:FormBuilder) { }
+  constructor(private fb:FormBuilder,private route:Router) { }
 
   ngOnInit(): void {
   }
@@ -17,12 +18,26 @@ export class ReactiveformComponent implements OnInit {
   registrationForm = this.fb.group({
     userName:["sunilk",[Validators.required,Validators.minLength(4)]],
     password:[''],
-    confirmPassword:['']
+    confirmPassword:[''],
+    email:['',[Validators.required,Validators.email]],
+    alternateEmails:this.fb.array([])
 
   },{validator:Password1Validator});
   
   get userName(){
     return this.registrationForm.get('userName');
+  }
+
+  get email(){
+    return this.registrationForm.get('email');
+  }
+
+  get alternateEmails(){
+    return this.registrationForm.get('alternateEmails') as FormArray;
+  }
+
+  addAlternateEmail(){
+    this.alternateEmails.push(this.fb.control(''));
   }
   // registrationForm = new FormGroup({
   //   userName : new FormControl("sunil"),
@@ -43,4 +58,10 @@ export class ReactiveformComponent implements OnInit {
       password:"abcd"
     })
   }
+
+    onSubmit(){
+      console.log("form submitted");
+      this.route.navigate(['/success']);
+  }
 }
+
