@@ -1,5 +1,6 @@
 import { Component, OnInit } from '@angular/core';
-import { FormControl, FormGroup } from '@angular/forms';
+import { FormBuilder, FormControl, FormGroup, Validators } from '@angular/forms';
+import { Password1Validator } from './password1.validator';
 
 @Component({
   selector: 'app-reactiveform',
@@ -8,14 +9,38 @@ import { FormControl, FormGroup } from '@angular/forms';
 })
 export class ReactiveformComponent implements OnInit {
 
-  constructor() { }
+  constructor(private fb:FormBuilder) { }
 
   ngOnInit(): void {
   }
 
-  registrationForm = new FormGroup({
-    userName : new FormControl("sunil"),
-    password:new FormControl(''),
-    confirmPassword:new FormControl('')
-  });
+  registrationForm = this.fb.group({
+    userName:["sunilk",[Validators.required,Validators.minLength(4)]],
+    password:[''],
+    confirmPassword:['']
+
+  },{validator:Password1Validator});
+  
+  get userName(){
+    return this.registrationForm.get('userName');
+  }
+  // registrationForm = new FormGroup({
+  //   userName : new FormControl("sunil"),
+  //   password:new FormControl(''),
+  //   confirmPassword:new FormControl('')
+  // });
+
+  loadApiData(){
+    this.registrationForm.setValue({
+      userName:"Kumar",
+      password:"abcd",
+      confirmPassword:"abcd"
+    })
+  }
+  loadApiPatch(){
+    this.registrationForm.patchValue({
+      userName:"Kumar",
+      password:"abcd"
+    })
+  }
 }
